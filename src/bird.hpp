@@ -40,6 +40,7 @@ namespace bi {
             bird_body.setFillColor(sf::Color(R, G, B, 200));
             bird_body.setPosition(bird_position);
 
+            fitness_score = 0;
             step = 0;
         }
 
@@ -55,9 +56,11 @@ namespace bi {
                 bird_velocity.y += GRAVITY;
                 bird_position += bird_velocity;
 
-                Eigen::MatrixXd sense(1, 2);
+                Eigen::MatrixXd sense(1, 4);
                 sense(0, 0) = 1 / (pipe.get_pipe_end_position().x - bird_position.x);
                 sense(0, 1) = 1 / (pipe.get_pipe_end_position().y - bird_position.y);
+                sense(0, 2) = 1 / bird_position.y;
+                sense(0, 3) = 1 / bird_velocity.y;
 
                 if (bird_brain.calculate_flap(sense)) {
                     flap();

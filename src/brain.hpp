@@ -17,8 +17,7 @@ namespace bi {
 
     public:
         brain() {
-            weights.emplace_back(Eigen::MatrixXd::Random(2, 6));
-            weights.emplace_back(Eigen::MatrixXd::Random(6, 1));
+            weights.emplace_back(Eigen::MatrixXd::Random(4, 1));
         }
 
         brain(std::vector<Eigen::MatrixXd> custom_weights) {
@@ -26,10 +25,7 @@ namespace bi {
         }
 
         bool calculate_flap(Eigen::MatrixXd& input) {
-            auto hidden_layer_in = input * weights[0];
-            auto hidden_layer_activated = hidden_layer_in.unaryExpr([](double x){ return (1 / (1 + std::pow(E, -x))); });
-
-            auto output_layer_in = hidden_layer_activated * weights[1];
+            auto output_layer_in = input * weights[0];
             auto output_layer_activated = output_layer_in.unaryExpr([](double x){ return (1 / (1 + std::pow(E, -x))); });
 
             return (output_layer_activated(0, 0) > 0.5);
@@ -54,13 +50,13 @@ namespace bi {
                     for (int j = 0; j < weights[x].cols(); ++j) {
                         auto rng = bi::random_uniform<double>(0, 1);
                         if (rng < mutation_rate) {
-                            weights[x](i, j) += bi::random_normal<double>(-1, 1);
+                            weights[x](i, j) += bi::random_normal<double>(-2, 2);
 
-                            if (weights[x](i, j) > 1) {
-                                weights[x](i, j) = 1;
+                            if (weights[x](i, j) > 20) {
+                                weights[x](i, j) = 20;
                             }
-                            else if (weights[x](i, j) < -1) {
-                                weights[x](i, j) = -1;
+                            else if (weights[x](i, j) < -20) {
+                                weights[x](i, j) = -20;
                             }
                         }
                     }
@@ -83,6 +79,21 @@ namespace bi {
             }
 
             file.close();
+        }
+
+        void load(const std::string& filename) {
+            std::ifstream file(filename);
+            if(file.is_open())
+            {
+                double num;
+                for (auto &weight : weights) {
+                    for (int i = 0; i < weight.rows(); ++i) {
+                        for (int j = 0; j < weight.cols(); ++j) {
+                           file >> weight(i, j);
+                        }
+                    }
+                }
+            }
         }
     };
 }

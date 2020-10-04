@@ -16,6 +16,8 @@ namespace bi {
         std::vector<pipe> pipes;
         std::vector<pipe> finished_pipes;
 
+        bird best_bird;
+
         size_t current_generation;
         size_t babies_per_generation;
         int babies_alive;
@@ -80,6 +82,10 @@ namespace bi {
             all_dead = false;
         }
 
+        void set_chad_bird(bird chad_bird) {
+            birds[0] = chad_bird;
+        }
+
         void draw(sf::RenderWindow* window) {
             for (auto &bird : birds) {
                 bird.draw(window);
@@ -107,8 +113,8 @@ namespace bi {
 
                         if (bird.get_fitness_score() > best_fitness_score) {
                             best_fitness_score = bird.get_fitness_score();
-
                             bird.save_bird();
+                            best_bird = bird;
                         }
 
                         babies_alive--;
@@ -135,7 +141,7 @@ namespace bi {
                 finished_pipes.erase(finished_pipes.begin());
             }
 
-            if (step > 0 && step % 30 == 0) {
+            if (step > 0 && step % 33 == 0) {
                 pipes.emplace_back(pipe());
             }
 
@@ -157,17 +163,17 @@ namespace bi {
 
         bool is_all_dead() { return all_dead; }
 
-        size_t get_best_bird_index() {
-            size_t i = 0;
-            double f = 0;
-            for (int j = 0; j < birds.size(); ++j) {
-                if (birds[j].get_fitness_score() > f) {
-                    f = birds[j].get_fitness_score();
-                    i = j;
-                }
-            }
-            return i;
-        }
+//        size_t get_best_bird_index() {
+//            size_t i = 0;
+//            double f = 0;
+//            for (int j = 0; j < birds.size(); ++j) {
+//                if (birds[j].get_fitness_score() > f) {
+//                    f = birds[j].get_fitness_score();
+//                    i = j;
+//                }
+//            }
+//            return i;
+//        }
 
         bird get_fit_parent_bird() {
             auto rng = bi::random_uniform<double>(0, fitness_score_sum);
@@ -179,7 +185,7 @@ namespace bi {
                 }
             }
 
-            return birds[get_best_bird_index()];
+            return birds[int(random_uniform<double>(0, birds.size() - 1))];
         }
 
         void calculate_fitness_score_sum() {
@@ -195,9 +201,15 @@ namespace bi {
             std::vector<bird> new_birds;
             new_birds.clear();
 
-            new_birds.push_back(birds[get_best_bird_index()] * birds[get_best_bird_index()]);
+            new_birds.push_back(best_bird * best_bird);
             for (int i = 1; i < babies_per_generation; i++) {
-                new_birds.push_back(get_fit_parent_bird() * get_fit_parent_bird());
+                if (i % 2 == 0) {
+                    new_birds.push_back(get_fit_parent_bird() * get_fit_parent_bird());
+                }
+                else {
+                    auto single_dad = get_fit_parent_bird();
+                    new_birds.push_back(single_dad * single_dad);
+                }
             }
 
             current_generation++;

@@ -1,2 +1,0 @@
-Score: 3221
-Fitness Score: 10374.8
