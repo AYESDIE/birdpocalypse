@@ -8,7 +8,6 @@ add_executable(birdpocalypse main.cpp)
 find_package(SFML 2 REQUIRED graphics)
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
-
 if(SFML_FOUND)
     include_directories(${SFML_INCLUDE_DIR})
     target_link_libraries(birdpocalypse sfml-graphics)
@@ -18,3 +17,5 @@ if(Eigen3_FOUND)
     target_link_libraries(birdpocalypse Eigen3::Eigen)
 endif()
 
+file(COPY ${CMAKE_SOURCE_DIR}/assets/arial.ttf DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/big_brains DESTINATION ${CMAKE_BINARY_DIR})

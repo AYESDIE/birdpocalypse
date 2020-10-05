@@ -42,8 +42,6 @@ namespace bi {
             ground.setPosition(sf::Vector2f(0, 700));
         }
 
-        ~pipe() {}
-
         void draw(sf::RenderWindow* window) {
             pipe_upper.setPosition(pipe_position + sf::Vector2f(- gap_width / 2, - 2000 - (gap_height / 2)));
             pipe_lower.setPosition(pipe_position + sf::Vector2f(- gap_width / 2, gap_height / 2));

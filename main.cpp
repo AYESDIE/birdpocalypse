@@ -11,7 +11,7 @@ int main() {
     bi::population pop(100);
 
     bi::brain chad_brain;
-    chad_brain.load("../big_brains/4-1/pogger_brain_gasm_2.txt");
+    chad_brain.load("big_brains/4-1/pogger_brain_gasm_2.txt");
 
     bi::bird chad_bird;
     chad_bird.set_brain(chad_brain);
@@ -32,11 +32,9 @@ int main() {
                     switch (event.key.code) {
                         case sf::Keyboard::D:
                             current_rate = (current_rate + 1) % refresh_rate.size();
-                            std::cout << current_rate;
                             break;
                         case sf::Keyboard::A:
                             current_rate = (current_rate - 1 < 0) ? refresh_rate.size() : current_rate - 1;
-                            std::cout << current_rate;
                             break;
                     }
                     break;

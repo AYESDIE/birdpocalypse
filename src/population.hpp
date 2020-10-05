@@ -39,7 +39,7 @@ namespace bi {
             sf::Text text;
             sf::Font font;
 
-            font.loadFromFile("../arial.ttf");
+            font.loadFromFile("arial.ttf");
             text.setFont(font);
             text.setFillColor(sf::Color(255, 255, 255));
             text.setCharacterSize(10);
@@ -65,6 +65,27 @@ namespace bi {
             window->draw(text);
         }
 
+        bird get_fit_parent_bird() {
+            auto rng = bi::random_uniform<double>(0, fitness_score_sum);
+            double running_sum = 0;
+            for (auto &bird : birds) {
+                running_sum += bird.get_fitness_score();
+                if (running_sum > rng) {
+                    return bird;
+                }
+            }
+
+            return birds[int(random_uniform<double>(0, birds.size() - 1))];
+        }
+
+        void calculate_fitness_score_sum() {
+            fitness_score_sum = 0;
+            for (auto &bird : birds) {
+                fitness_score_sum += bird.get_fitness_score();
+            }
+        }
+
+
     public:
         population(size_t babies) {
             babies_per_generation = babies;
@@ -81,6 +102,8 @@ namespace bi {
             step = 0;
             all_dead = false;
         }
+
+        bool is_all_dead() { return all_dead; }
 
         void set_chad_bird(bird chad_bird) {
             birds[0] = chad_bird;
@@ -141,7 +164,7 @@ namespace bi {
                 finished_pipes.erase(finished_pipes.begin());
             }
 
-            if (step > 0 && step % 33 == 0) {
+            if (step > 0 && step % 34 == 0) {
                 pipes.emplace_back(pipe());
             }
 
@@ -158,40 +181,6 @@ namespace bi {
         void flap() {
             for (auto &item : birds) {
                 item.flap();
-            }
-        }
-
-        bool is_all_dead() { return all_dead; }
-
-//        size_t get_best_bird_index() {
-//            size_t i = 0;
-//            double f = 0;
-//            for (int j = 0; j < birds.size(); ++j) {
-//                if (birds[j].get_fitness_score() > f) {
-//                    f = birds[j].get_fitness_score();
-//                    i = j;
-//                }
-//            }
-//            return i;
-//        }
-
-        bird get_fit_parent_bird() {
-            auto rng = bi::random_uniform<double>(0, fitness_score_sum);
-            double running_sum = 0;
-            for (auto &bird : birds) {
-                running_sum += bird.get_fitness_score();
-                if (running_sum > rng) {
-                    return bird;
-                }
-            }
-
-            return birds[int(random_uniform<double>(0, birds.size() - 1))];
-        }
-
-        void calculate_fitness_score_sum() {
-            fitness_score_sum = 0;
-            for (auto &bird : birds) {
-                fitness_score_sum += bird.get_fitness_score();
             }
         }
 

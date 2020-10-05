@@ -44,6 +44,22 @@ namespace bi {
             step = 0;
         }
 
+        const double get_fitness_score() { return fitness_score; }
+
+        void set_alive(bool is) {
+            alive = is;
+        }
+
+        const bool is_alive() { return alive; }
+
+        void calculate_fitness_score() {
+            fitness_score = std::pow(step, 2) / 1000;
+        }
+
+        void set_brain(const brain& B) {
+            bird_brain = B;
+        }
+
         void draw(sf::RenderWindow* window) {
             if (alive) {
                 bird_body.setPosition(bird_position);
@@ -81,22 +97,6 @@ namespace bi {
             points.push_back(bird_position + sf::Vector2f(bird_radius, 0));
             points.push_back(bird_position + sf::Vector2f(- bird_radius, 0));
             return points;
-        }
-
-        void set_alive(bool is) {
-            alive = is;
-        }
-
-        bool is_alive() { return alive; }
-
-        void calculate_fitness_score() {
-            fitness_score = std::pow(step, 2) / 1000;
-        }
-
-        double get_fitness_score() { return fitness_score; }
-
-        void set_brain(brain B) {
-            bird_brain = B;
         }
 
         bird operator*(bird const &rhs) {
